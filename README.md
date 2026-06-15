@@ -21,6 +21,5 @@
 
 ## v2.0 coming soon...
 -rotating identities
--![Screenshot2](dc2.png)
 ---
 Made by bende
