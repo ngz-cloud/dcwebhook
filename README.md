@@ -19,5 +19,8 @@
 3. Customize name/avatar, write message, attach file (optional)
 4. Click **SEND ONE** or **START SPAM**
 
+## v2.0 coming soon...
+rotating identities
+![Screenshot2](sc2.png)
 ---
 Made by bende
