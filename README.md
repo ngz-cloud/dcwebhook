@@ -20,6 +20,6 @@
 4. Click **SEND ONE** or **START SPAM**
 
 ## v2.0 coming soon...
--rotating identities
+- rotating identities
 ---
 Made by bende
