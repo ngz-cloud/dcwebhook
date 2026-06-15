@@ -2,6 +2,8 @@
 
 > Upload avatar, attach files, spam safely — all in one local tool.
 
+![Screenshot](screenshot.png)
+
 **Live:** [https://ngz-cloud.github.io/dcwebhook/](https://ngz-cloud.github.io/dcwebhook/)
 
 ## Features
@@ -16,5 +18,6 @@
 2. Paste it into the tool
 3. Customize name/avatar, write message, attach file (optional)
 4. Click **SEND ONE** or **START SPAM**
+
 ---
 Made by bende
