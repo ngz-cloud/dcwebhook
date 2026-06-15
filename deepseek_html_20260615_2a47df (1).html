@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Discord Webhook · made by bende</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0c10;
+            font-family: 'Fira Code', 'Courier New', 'Menlo', monospace;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .tool-container {
+            max-width: 1100px;
+            width: 100%;
+            background: #0f1117;
+            border: 1px solid #2d2f36;
+            border-radius: 20px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0b0d12;
+            padding: 20px 28px;
+            border-bottom: 1px solid #23252e;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .title {
+            font-size: 1.55rem;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            color: #e3e6f0;
+        }
+        .title span {
+            color: #5865f2;
+            font-weight: 600;
+        }
+        .badge {
+            font-size: 0.7rem;
+            background: #1e212a;
+            padding: 6px 12px;
+            border-radius: 60px;
+            color: #a6b0cf;
+            font-family: monospace;
+            border: 1px solid #2c2f3a;
+        }
+        .credit {
+            font-size: 0.7rem;
+            color: #6c7592;
+            background: #10131c;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-family: monospace;
+        }
+
+        .content {
+            padding: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            color: #8e97b0;
+            margin-bottom: 8px;
+        }
+        input, textarea {
+            width: 100%;
+            background: #06070c;
+            border: 1px solid #2a2c36;
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #eef2ff;
+            transition: 0.2s ease;
+            resize: vertical;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #5865f2;
+            box-shadow: 0 0 0 2px rgba(88,101,242,0.2);
+        }
+        textarea {
+            min-height: 95px;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .row .input-group {
+            flex: 1;
+        }
+        .hint {
+            font-size: 0.7rem;
+            color: #6b7280;
+            margin-top: 6px;
+            font-family: monospace;
+        }
+
+        .upload-area {
+            background: #080b10;
+            border: 1px dashed #3a3f4e;
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 24px;
+            transition: 0.1s;
+        }
+        .file-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e212a;
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #b9c3ef;
+        }
+        .file-label:hover {
+            background: #2c3040;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-info {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .file-name {
+            background: #00000055;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #b9c3ef;
+        }
+        .remove-file {
+            background: none;
+            border: 1px solid #5a3e48;
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: #ff9494;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .image-preview {
+            max-width: 80px;
+            max-height: 60px;
+            border-radius: 10px;
+            border: 1px solid #3a3f4e;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin: 28px 0 24px;
+            border-top: 1px solid #1e2128;
+            padding-top: 26px;
+        }
+        button {
+            background: #1a1d26;
+            border: 1px solid #323744;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-family: 'Fira Code', monospace;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #dbdeed;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        button.primary {
+            background: #5865f2;
+            border-color: #7983f5;
+            color: white;
+        }
+        button.primary:hover {
+            background: #4752c4;
+            transform: scale(0.98);
+        }
+        button.danger {
+            background: #2c1a1f;
+            border-color: #a03e4a;
+            color: #ff8a9f;
+        }
+        button.danger:hover {
+            background: #3e232a;
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .log-section {
+            margin-top: 28px;
+        }
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+        .log-header span {
+            font-size: 0.7rem;
+            color: #6c7592;
+        }
+        .log-area {
+            background: #06080c;
+            border: 1px solid #262933;
+            border-radius: 18px;
+            padding: 16px;
+            height: 280px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+        }
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #181b22;
+            color: #bfc9e6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .log-entry.error {
+            color: #ff7b72;
+        }
+        .log-entry.success {
+            color: #7ee787;
+        }
+        .log-entry.warning {
+            color: #ffd966;
+        }
+        .log-entry.info {
+            color: #8ab2ff;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101218;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #363b4a;
+            border-radius: 8px;
+        }
+        .stat {
+            font-size: 0.75rem;
+            background: #10131c;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tool-container">
+    <div class="header">
+        <div class="title">Discord <span>webhook</span> · avatar upload</div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="badge">data URI avatar | file attach | safe spam</div>
+            <div class="credit">made by bende</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- webhook url -->
+        <div class="input-group">
+            <label>🔗 WEBHOOK URL</label>
+            <input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/..." autocomplete="off">
+            <div class="hint">Full Discord webhook URL</div>
+        </div>
+
+        <!-- custom name + avatar row -->
+        <div class="row">
+            <div class="input-group">
+                <label>🤖 CUSTOM NAME (optional)</label>
+                <input type="text" id="customName" placeholder="e.g., CustomBot" autocomplete="off">
+                <div class="hint">Leave empty to use webhook's default name</div>
+            </div>
+            <div class="input-group">
+                <label>🖼️ AVATAR URL (optional) — or use upload below</label>
+                <input type="text" id="avatarUrl" placeholder="https://... or data:image/...">
+                <div class="hint">Direct link OR data URI (auto-filled when you upload)</div>
+            </div>
+        </div>
+
+        <!-- Upload avatar image (converted to data URI) -->
+        <div class="upload-area">
+            <label class="file-label">
+                📸 UPLOAD AVATAR IMAGE
+                <input type="file" id="avatarUpload" accept="image/jpeg,image/png,image/gif,image/webp">
+            </label>
+            <div id="avatarPreviewArea" class="file-info" style="display: none;">
+                <img id="avatarPreviewImg" class="image-preview">
+                <span id="avatarFileName" class="file-name"></span>
+                <button id="clearAvatarBtn" class="remove-file">✖ clear</button>
+            </div>
+            <div class="hint">Upload an image → converted to data URL & used as avatar. Works for spam too.</div>
+        </div>
+
+        <!-- message attachment (file to send with webhook) -->
+        <div class="upload-area">
+            <label class="file-label">
+                📎 ATTACH FILE TO MESSAGE
+                <input type="file" id="fileAttach" accept="image/*,video/*,application/pdf,.txt">
+            </label>
+            <div id="attachInfo" class="file-info" style="display: none;">
+                <span id="attachFileName" class="file-name"></span>
+                <img id="attachPreview" class="image-preview" style="display: none;">
+                <button id="clearAttachBtn" class="remove-file">✖ remove</button>
+            </div>
+            <div class="hint">File sent with the message (image, video, PDF, etc.)</div>
+        </div>
+
+        <!-- text message -->
+        <div class="input-group">
+            <label>✉️ MESSAGE (max 2000 chars)</label>
+            <textarea id="messageText" placeholder="Your message here... (can be empty if you attach a file)"></textarea>
+        </div>
+
+        <!-- spam controls -->
+        <div class="row">
+            <div class="input-group">
+                <label>🔁 SPAM COUNT</label>
+                <input type="number" id="spamCount" value="5" min="1" max="500" step="1">
+                <div class="hint">How many times to send (each with same avatar & file)</div>
+            </div>
+            <div class="input-group">
+                <label>⏱️ DELAY (seconds)</label>
+                <input type="number" id="delaySec" value="0.35" min="0.1" step="0.05">
+                <div class="hint">≥0.2s recommended, 0.35s safer for files</div>
+            </div>
+        </div>
+
+        <!-- buttons -->
+        <div class="actions">
+            <button id="singleBtn" class="primary">📨 SEND ONE</button>
+            <button id="spamBtn" class="primary">🌀 START SPAM</button>
+            <button id="stopBtn" class="danger" disabled>⏹️ STOP</button>
+        </div>
+
+        <!-- log console -->
+        <div class="log-section">
+            <div class="log-header">
+                <span>⚡ REQUEST LOG</span>
+                <span id="spamStatus" class="stat">● idle</span>
+            </div>
+            <div id="logArea" class="log-area">
+                <div class="log-entry info">[✓] ready – upload avatar image → auto data URI</div>
+                <div class="log-entry info">made by bende – spam preserves custom avatar & file attachment</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DOM elements
+    const webhookInput = document.getElementById('webhookUrl');
+    const customNameInput = document.getElementById('customName');
+    const avatarUrlInput = document.getElementById('avatarUrl');
+    const messageInput = document.getElementById('messageText');
+    const spamCountInput = document.getElementById('spamCount');
+    const delaySecInput = document.getElementById('delaySec');
+    const singleBtn = document.getElementById('singleBtn');
+    const spamBtn = document.getElementById('spamBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const logArea = document.getElementById('logArea');
+    const spamStatusSpan = document.getElementById('spamStatus');
+
+    // Avatar upload elements
+    const avatarUploadInput = document.getElementById('avatarUpload');
+    const avatarPreviewArea = document.getElementById('avatarPreviewArea');
+    const avatarPreviewImg = document.getElementById('avatarPreviewImg');
+    const avatarFileNameSpan = document.getElementById('avatarFileName');
+    const clearAvatarBtn = document.getElementById('clearAvatarBtn');
+
+    // Message attachment elements
+    const fileAttachInput = document.getElementById('fileAttach');
+    const attachInfoDiv = document.getElementById('attachInfo');
+    const attachFileNameSpan = document.getElementById('attachFileName');
+    const attachPreviewImg = document.getElementById('attachPreview');
+    const clearAttachBtn = document.getElementById('clearAttachBtn');
+
+    let selectedAttachFile = null;   // file to send with message
+    let currentAvatarDataUri = '';   // store data URI for avatar
+
+    // --- Avatar upload: convert to data URI and set avatarUrl input
+    avatarUploadInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            addLog('❌ Avatar must be an image file (jpeg, png, gif, webp)', 'error');
+            avatarUploadInput.value = '';
+            return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            addLog('⚠️ Avatar image >2MB may cause large payload, but trying...', 'warning');
+        }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const dataUrl = ev.target.result;
+            currentAvatarDataUri = dataUrl;
+            avatarUrlInput.value = dataUrl;   // fill the text field
+            // show preview
+            avatarPreviewImg.src = dataUrl;
+            avatarFileNameSpan.textContent = `${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+            avatarPreviewArea.style.display = 'flex';
+            addLog(`🖼️ Avatar uploaded & converted to data URI (${file.name})`, 'success');
+        };
+        reader.onerror = () => {
+            addLog('❌ Failed to read avatar file', 'error');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    clearAvatarBtn.addEventListener('click', () => {
+        currentAvatarDataUri = '';
+        avatarUrlInput.value = '';
+        avatarUploadInput.value = '';
+        avatarPreviewArea.style.display = 'none';
+        addLog('🗑️ Avatar cleared', 'info');
+    });
+
+    // --- Message attachment (file to send with webhook)
+    fileAttachInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 10 * 1024 * 1024) {
+            addLog(`❌ File too large (${(file.size/1e6).toFixed(1)}MB). Discord limit ~8MB.`, 'error');
+            fileAttachInput.value = '';
+            return;
+        }
+        selectedAttachFile = file;
+        attachFileNameSpan.textContent = `${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                attachPreviewImg.src = ev.target.result;
+                attachPreviewImg.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            attachPreviewImg.style.display = 'none';
+        }
+        attachInfoDiv.style.display = 'flex';
+        addLog(`📎 Attached to message: ${file.name}`, 'info');
+    });
+
+    clearAttachBtn.addEventListener('click', () => {
+        selectedAttachFile = null;
+        fileAttachInput.value = '';
+        attachInfoDiv.style.display = 'none';
+        addLog(`🗑️ Removed message attachment`, 'info');
+    });
+
+    // --- Logging and spam state
+    function addLog(message, type = 'info') {
+        const logDiv = document.createElement('div');
+        logDiv.className = `log-entry ${type}`;
+        const timestamp = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', second:'2-digit' });
+        logDiv.textContent = `[${timestamp}] ${message}`;
+        logArea.appendChild(logDiv);
+        logDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    let spamActive = false;
+    let spamStopRequested = false;
+
+    function setSpamMode(active) {
+        spamActive = active;
+        if (active) {
+            spamBtn.disabled = true;
+            stopBtn.disabled = false;
+            spamStatusSpan.textContent = '● spamming ...';
+            spamStatusSpan.style.color = '#ffb280';
+        } else {
+            spamBtn.disabled = false;
+            stopBtn.disabled = true;
+            spamStatusSpan.textContent = '● idle';
+            spamStatusSpan.style.color = '#6c7592';
+            spamStopRequested = false;
+        }
+    }
+
+    // --- Core send function with optional file attachment + avatar (data URI or URL)
+    async function sendWebhookMessage(webhookUrl, message, customName, avatar, file, retryCount = 0) {
+        const MAX_RETRIES = 2;
+        let body;
+        let headers = {};
+        const isMultipart = !!file;
+
+        if (isMultipart) {
+            const formData = new FormData();
+            const payload = { content: message.substring(0, 2000) };
+            if (customName && customName.trim() !== "") payload.username = customName.trim();
+            if (avatar && avatar.trim() !== "") payload.avatar_url = avatar.trim();
+            formData.append('payload_json', JSON.stringify(payload));
+            formData.append('file', file, file.name);
+            body = formData;
+        } else {
+            const payload = { content: message.substring(0, 2000) };
+            if (customName && customName.trim() !== "") payload.username = customName.trim();
+            if (avatar && avatar.trim() !== "") payload.avatar_url = avatar.trim();
+            body = JSON.stringify(payload);
+            headers['Content-Type'] = 'application/json';
+        }
+
+        try {
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: headers,
+                body: body
+            });
+
+            if (response.status === 204 || response.status === 200) {
+                return { success: true, rateLimited: false };
+            }
+            if (response.status === 429) {
+                let retryAfterMs = 1000;
+                try {
+                    const data = await response.json();
+                    if (data.retry_after) retryAfterMs = data.retry_after * 1000;
+                } catch(e) {}
+                addLog(`⚠️ Rate limited! waiting ${(retryAfterMs/1000).toFixed(1)}s before retry...`, 'warning');
+                await new Promise(r => setTimeout(r, retryAfterMs));
+                if (retryCount < MAX_RETRIES) {
+                    return await sendWebhookMessage(webhookUrl, message, customName, avatar, file, retryCount + 1);
+                } else {
+                    return { success: false, rateLimited: true, error: 'rate limit retries exhausted' };
+                }
+            }
+            let errorText = `HTTP ${response.status}`;
+            try {
+                const errJson = await response.json();
+                errorText += ` - ${errJson.message || JSON.stringify(errJson)}`;
+            } catch(e) {}
+            addLog(`❌ Send failed: ${errorText}`, 'error');
+            return { success: false, rateLimited: false, error: errorText };
+        } catch (error) {
+            addLog(`❌ Network error: ${error.message}`, 'error');
+            return { success: false, rateLimited: false, error: error.message };
+        }
+    }
+
+    // --- Send one message
+    async function sendOne() {
+        const url = webhookInput.value.trim();
+        const msg = messageInput.value.trim();
+        const name = customNameInput.value;
+        const avatar = avatarUrlInput.value;  // could be data URI or URL
+        const file = selectedAttachFile;
+
+        if (!url) {
+            addLog('⛔ Webhook URL is empty', 'error');
+            return;
+        }
+        if (!msg && !file) {
+            addLog('⛔ Either message or file attachment is required', 'error');
+            return;
+        }
+        if (msg.length > 2000) {
+            addLog(`⛔ Message exceeds 2000 chars (${msg.length})`, 'error');
+            return;
+        }
+        if (!url.startsWith('https://discord.com/api/webhooks/')) {
+            addLog('⚠️ URL does not look like a valid Discord webhook', 'warning');
+        }
+
+        addLog(`📤 Sending one (file: ${file ? file.name : 'none'}, avatar: ${avatar ? 'custom' : 'default'})`, 'info');
+        const result = await sendWebhookMessage(url, msg, name, avatar, file);
+        if (result.success) {
+            addLog(`✅ Message delivered.`, 'success');
+        } else {
+            addLog(`❌ Delivery failed.`, 'error');
+        }
+    }
+
+    // --- Spam
+    async function startSpam() {
+        if (spamActive) {
+            addLog('⚠️ Spam already running, stop it first.', 'warning');
+            return;
+        }
+
+        const url = webhookInput.value.trim();
+        const msg = messageInput.value.trim();
+        const name = customNameInput.value;
+        const avatar = avatarUrlInput.value;
+        const file = selectedAttachFile;
+        let count = parseInt(spamCountInput.value, 10);
+        let delay = parseFloat(delaySecInput.value);
+
+        if (!url) {
+            addLog('⛔ Cannot spam: webhook URL missing', 'error');
+            return;
+        }
+        if (!msg && !file) {
+            addLog('⛔ Cannot spam: need message or attachment', 'error');
+            return;
+        }
+        if (isNaN(count) || count < 1) count = 1;
+        if (count > 500) {
+            addLog('⚠️ Spam count capped to 500', 'warning');
+            count = 500;
+        }
+        if (isNaN(delay) || delay < 0.1) delay = 0.35;
+        if (delay < 0.2) {
+            addLog(`⚠️ Delay ${delay}s is very low; may trigger rate limits.`, 'warning');
+        }
+
+        addLog(`🚀 STARTING SPAM: ${count} messages, delay = ${delay}s`, 'info');
+        addLog(`🎭 Name: ${name || '(default)'} | Avatar: ${avatar ? 'custom data/url' : 'default'} | File: ${file ? file.name : 'none'}`, 'info');
+        setSpamMode(true);
+        spamStopRequested = false;
+
+        let successCount = 0, failCount = 0;
+
+        for (let i = 1; i <= count; i++) {
+            if (spamStopRequested) {
+                addLog(`⏹️ Spam interrupted at ${i}/${count}`, 'warning');
+                break;
+            }
+            addLog(`→ Sending ${i}/${count} ...`, 'info');
+            const result = await sendWebhookMessage(url, msg, name, avatar, file);
+            if (result.success) {
+                successCount++;
+                addLog(`✓ [${i}/${count}] delivered`, 'success');
+            } else {
+                failCount++;
+                addLog(`✗ [${i}/${count}] failed`, 'error');
+                if (result.error && (result.error.includes('401') || result.error.includes('404'))) {
+                    addLog(`❌ Webhook invalid, aborting.`, 'error');
+                    break;
+                }
+            }
+            if (i < count && !spamStopRequested && delay > 0) {
+                await new Promise(r => setTimeout(r, delay * 1000));
+            }
+        }
+        addLog(`🏁 Spam finished. Success: ${successCount} / Failed: ${failCount}`, successCount > 0 ? 'success' : 'error');
+        setSpamMode(false);
+    }
+
+    function stopSpam() {
+        if (!spamActive) {
+            addLog(`No active spam.`, 'info');
+            return;
+        }
+        spamStopRequested = true;
+        addLog(`⏸️ Stopping spam...`, 'warning');
+    }
+
+    singleBtn.addEventListener('click', () => {
+        if (spamActive) {
+            addLog(`⚠️ Spam in progress, stop it first.`, 'warning');
+            return;
+        }
+        sendOne();
+    });
+
+    spamBtn.addEventListener('click', () => {
+        if (spamActive) {
+            addLog(`⚠️ Already spamming, use STOP.`, 'warning');
+            return;
+        }
+        startSpam();
+    });
+
+    stopBtn.addEventListener('click', stopSpam);
+
+    addLog(`💡 Upload an avatar image → automatically converted to data URI and used as profile picture.`, 'info');
+    addLog(`🖼️ You can also attach a file to the message. Both work in spam mode.`, 'success');
+    addLog(`✨ made by bende – enjoy the tool!`, 'success');
+</script>
+</body>
+</html>
